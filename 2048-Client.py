@@ -9,6 +9,10 @@ root = customtkinter.CTk()
 ico_path = 'Python-2048/icon.ico'
 root.iconbitmap(ico_path) # mit vorsicht zu genießen
 labels = [] #spielfeld (als Label)
+scorelabel = customtkinter.CTkLabel(root, text="Du : 0", font=("Arial",15),width=120 ,height=40)
+enemyscorelabel = customtkinter.CTkLabel(root, text="Serversuche läuft...", font=("Arial",15),width=120,height=40)
+text = customtkinter.CTkLabel(root, text="2048", font=("Arial",15),width=240,height=40)
+
 keylog = False #verhindert merge bei mehrfacheingabe
 
 #Für socket Kommunication
@@ -16,6 +20,7 @@ keylog = False #verhindert merge bei mehrfacheingabe
 SERVER_HOST = '192.168.100.190'
 PORT = 6969
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+last_received_message = ""
 #####################################
 
 
@@ -23,16 +28,17 @@ kill = False #True wenn T1 gekillt werden soll
 
 #trigger bei tastendruck
 def handle_key(event):
-    if  globals()["keylog"] == False:
-        globals()["keylog"] = True
-        i = 0
-        while i < 3:
-            i = i + 1
-            merge(event.keysym)
-        #time.sleep(0.2) #fuers feeling
-        newnumber()
-        handle_color()
-        globals()["keylog"] = False
+        if  globals()["keylog"] == False:
+            globals()["keylog"] = True
+            i = 0
+            while i < 3:
+                i = i + 1
+                merge(event.keysym)
+            #time.sleep(0.2) #fuers feeling
+            newnumber()
+            handle_color()
+            globals()["keylog"] = False
+
 
 #fügt neue Zahl hinzu
 def newnumber():
@@ -163,18 +169,20 @@ def on_closing():
 def handle_start():
     root.protocol("WM_DELETE_WINDOW", on_closing)
     root.title("2048")
-    root.minsize(500,440)
-    root.maxsize(500,440)
+    root.minsize(500,550)
+    root.maxsize(500,550)
     root.config(background="white")
     root.bind("<KeyPress>", handle_key)
 
-    text = customtkinter.CTkLabel(root, text="2048", font=("Arial",25),width=500,height=40)
-    text.grid(row=0, column=0, columnspan=4, sticky="nsew")
+    
+    scorelabel.grid(row=0, column=0)
+    text.grid(row=0, column=1, columnspan=2)  
+    enemyscorelabel.grid(row=0, column=3)
 
     #inizialisierung spielfeld
     for i in range(4):
         for j in range(4):
-            label = customtkinter.CTkLabel(master=root, text=0, fg_color="white",text_color="black",bg_color="white", font=("Arial",25),width=120,height=90, corner_radius=25)
+            label = customtkinter.CTkLabel(master=root, text=0, fg_color="white",text_color="black",bg_color="white", font=("Arial",25),width=120,height=120, corner_radius=25)
             label.grid(row=i+1, column=j, padx=2, pady=2)
             labels.append(label)
 
@@ -188,8 +196,8 @@ def handle_start():
 
     root.mainloop()
 
+#communication to server, open in thread t1
 def handle_com():
-    print(kill)
     if kill == True:
         sys.exit()
     else:
@@ -204,16 +212,26 @@ def handle_com():
             print("Versuche erneut...")
             handle_com()
         if server_connected:
+            enemyscorelabel.configure(text="Spielersuche läuft...")
             while True:
                 if kill:
                     sys.exit()
                 try:
-                    socket.send(f":{count_score()}:;{highest_number()};".encode('utf-8'))
-                    print(f"Score: {count_score()}")
-                    print(f"Höchste Zahl: {highest_number()}")
-                    message = socket.recv(1024).decode('utf-8')
-                    print(message)
-                    time.sleep(0.5)
+                    socket.send(f":{count_score()}:;{get_highest_number()};".encode('utf-8'))
+                    #print(f"Score: {count_score()}")
+                    #print(f"Höchste Zahl: {get_highest_number()}")
+                    global last_received_message
+                    last_received_message = socket.recv(1024).decode('utf-8')
+                    print(last_received_message)
+                    if(last_message_gamestate() == "1"):
+                        enemyscorelabel.configure(text= f"Gegner: {last_message_enemyscore()}")
+                        scorelabel.configure(text= f"Du: {count_score()}")
+                    elif(last_message_gamestate() == "2"):
+                        text.configure(text= "GEWONNEN")
+                    elif(last_message_gamestate() == "3"):
+                        text.configure(text= "VERLOREN")
+                    elif(last_message_gamestate() == "0"):
+                        enemyscorelabel.configure(text= "Spielersuche läuft...")
                 except ConnectionResetError:
                     print("Die Verbindung zum Server wurde verloren")
                     print("Versuche erneut in: 2 Sekunden")
@@ -226,12 +244,22 @@ def count_score():
        counter = counter + label.cget("text")
     return counter
 
-def highest_number():
+def get_highest_number():
     highest = 0
     for label in labels:
         if label.cget("text") > highest:
             highest = label.cget("text")
     return highest
+
+def last_message_gamestate():
+    return (last_received_message[int(last_received_message.find(":"))+1:int(last_received_message.rfind(":"))])
+
+def last_message_enemyscore():
+    return (last_received_message[int(last_received_message.find(";"))+1:int(last_received_message.rfind(";"))])
+
+def last_message_enemyheighestcount():
+    return (last_received_message[int(last_received_message.find(","))+1:int(last_received_message.rfind(","))])
+    
 
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
