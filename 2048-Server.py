@@ -56,8 +56,8 @@ def handle_matchmaking():
             del queueaddress[0]
 
         else:
-            print(f"Nur {len(queue)} Spieler da. Spielsuche wird in 5 Sekunden erneut probiert!")
-            time.sleep(5)
+            print(f"Nur {len(queue)} Spieler da.")
+            time.sleep(1)
 
 def lastmessage_score(message):
     return (message[int(message.find(":"))+1:int(message.rfind(":"))])

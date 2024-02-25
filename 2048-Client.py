@@ -8,8 +8,6 @@ import os
 import signal
 
 root = customtkinter.CTk()
-ico_path = 'Python-2048/icon.ico'
-root.iconbitmap(ico_path) # mit vorsicht zu genießen
 labels = [] #spielfeld (als Label)
 scorelabel = customtkinter.CTkLabel(root, text="Du : 0", font=("Arial",15),width=120 ,height=40)
 enemyscorelabel = customtkinter.CTkLabel(root, text="Serversuche läuft...", font=("Arial",15),width=120,height=40)
@@ -192,7 +190,6 @@ def handle_start():
     newnumber()
     newnumber()
     handle_color()
-
     root.mainloop()
 
 #communication to server, open in thread t1
@@ -253,7 +250,7 @@ def last_message_enemyscore():
 
 def last_message_enemyheighestcount():
     return (last_received_message[int(last_received_message.find(","))+1:int(last_received_message.rfind(","))])
-    
+
 
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
