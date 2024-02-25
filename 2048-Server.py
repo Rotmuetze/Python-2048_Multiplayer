@@ -10,21 +10,22 @@ queue = []
 queueaddress = []
 
 def handle_queuecounting():
+    time.sleep(1)
     while True:
         print(f"In der Warteschlange: {len(queue)}")
-        time.sleep(2)
+        time.sleep(5)
 
 def handle_match(com1 : socket,add1,com2 : socket,add2):
     timeout = 10
-    gamestate = 1
+    gamestate1 = 1
+    gamestate2 = 1
     print(f"Neues Match mit: {com1} und {com2}")
     while True:
-        print("in loop")
         try:
             message1 = com1.recv(1024).decode('utf-8')
             message2 = com2.recv(1024).decode('utf-8')
-            com1.send(f":{gamestate}:;{lastmessage_score(message2)};,{lastmessage_highestnumber(message2)},".encode('utf-8'))
-            com2.send(f":{gamestate}:;{lastmessage_score(message1)};,{lastmessage_highestnumber(message1)},".encode('utf-8'))
+            com1.send(f":{gamestate1}:;{lastmessage_score(message2)};,{lastmessage_highestnumber(message2)},".encode('utf-8'))
+            com2.send(f":{gamestate2}:;{lastmessage_score(message1)};,{lastmessage_highestnumber(message1)},".encode('utf-8'))
         except:
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
@@ -46,13 +47,13 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
                     queueaddress(com2)
                 except:
                     print(f"Spieler {com2} bereits gelöscht. Wird übersprungen")
-
                 sys.exit()
-        print(lastmessage_score(message1))
-        print(lastmessage_highestnumber(message1))
-
-        print(lastmessage_score(message2))
-        print(lastmessage_highestnumber(message2)) 
+        if  lastmessage_highestnumber(message1) == "64":
+            gamestate1 = 2
+            gamestate2 = 3
+        if lastmessage_highestnumber(message2) == "64":
+            gamestate1 = 3
+            gamestate2 = 2
 
 def handle_matchmaking():
     while True:

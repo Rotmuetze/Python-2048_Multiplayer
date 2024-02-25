@@ -28,17 +28,17 @@ kill = False #True wenn T1 gekillt werden soll
 
 #trigger bei tastendruck
 def handle_key(event):
-        if  globals()["keylog"] == False:
-            globals()["keylog"] = True
-            i = 0
-            while i < 3:
-                i = i + 1
-                merge(event.keysym)
-            #time.sleep(0.2) #fuers feeling
-            newnumber()
-            handle_color()
-            globals()["keylog"] = False
-
+        if(last_message_gamestate() == "1"):
+            if  globals()["keylog"] == False:
+                globals()["keylog"] = True
+                i = 0
+                while i < 3:
+                    i = i + 1
+                    merge(event.keysym)
+                #time.sleep(0.2) #fuers feeling
+                newnumber()
+                handle_color()
+                globals()["keylog"] = False
 
 #fügt neue Zahl hinzu
 def newnumber():
@@ -206,10 +206,8 @@ def handle_com():
             socket.connect((SERVER_HOST,PORT))
             server_connected = True
         except ConnectionRefusedError:
-            print("Server nicht gefunden")
-            print("Versuche erneut in: 2 Sekunden")
-            time.sleep(2)
-            print("Versuche erneut...")
+            print("Serververbindung verloren")
+            enemyscorelabel.configure(text= "Server verloren...")
             handle_com()
         if server_connected:
             enemyscorelabel.configure(text="Spielersuche läuft...")
@@ -218,14 +216,11 @@ def handle_com():
                     sys.exit()
                 try:
                     socket.send(f":{count_score()}:;{get_highest_number()};".encode('utf-8'))
-                    #print(f"Score: {count_score()}")
-                    #print(f"Höchste Zahl: {get_highest_number()}")
                     global last_received_message
                     last_received_message = socket.recv(1024).decode('utf-8')
-                    print(last_received_message)
                     if(last_message_gamestate() == "1"):
-                        enemyscorelabel.configure(text= f"Gegner: {last_message_enemyscore()}")
-                        scorelabel.configure(text= f"Du: {count_score()}")
+                        enemyscorelabel.configure(text= f"Gegner: {last_message_enemyheighestcount()}")
+                        scorelabel.configure(text= f"Du: {get_highest_number()}")
                     elif(last_message_gamestate() == "2"):
                         text.configure(text= "GEWONNEN")
                     elif(last_message_gamestate() == "3"):
