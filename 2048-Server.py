@@ -9,7 +9,7 @@ HOST = socket.gethostbyname(socket.gethostname())
 queue = []
 queueaddress = []
 
-def handle_queuecounting():
+def handle_queue():
     time.sleep(1)
     while True:
         print(f"In der Warteschlange: {len(queue)}")
@@ -30,29 +30,19 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
             timeout = timeout - 1
+            print(timeout)
             time.sleep(1)
             if timeout == 0:
                 print("-----------------------------------------------")
                 print("Timeout...")
-                print("Socket wird gelöscht, Sitzung wird gelöscht")
+                print("Sitzung wird gelöscht")
                 print("-----------------------------------------------")
-                try:
-                    queue.remove(com1)
-                    queueaddress(com1)
-                except:
-                    print(f"Spieler {com1} bereits gelöscht. Wird übersprungen")
-                
-                try:
-                    queue.remove(com2)
-                    queueaddress(com2)
-                except:
-                    print(f"Spieler {com2} bereits gelöscht. Wird übersprungen")
                 sys.exit()
         if  lastmessage_highestnumber(message1) == "64":
             gamestate1 = 2
             gamestate2 = 3
         if lastmessage_highestnumber(message2) == "64":
-            gamestate1 = 3
+            gamestate1 = 3 
             gamestate2 = 2
 
 def handle_matchmaking():
@@ -76,7 +66,7 @@ def lastmessage_highestnumber(message):
     return (message[int(message.find(";"))+1:int(message.rfind(";"))])
 
     
-threadtime = threading.Thread(target=handle_queuecounting)
+threadtime = threading.Thread(target=handle_queue)
 threadtime.start()
 
 threadmatchmaking = threading.Thread(target=handle_matchmaking)

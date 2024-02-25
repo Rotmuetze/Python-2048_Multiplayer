@@ -4,6 +4,8 @@ import customtkinter
 import threading
 import socket
 import sys
+import os
+import signal
 
 root = customtkinter.CTk()
 ico_path = 'Python-2048/icon.ico'
@@ -160,10 +162,7 @@ def handle_color():
             label.configure(fg_color="white")
 
 def on_closing():
-    global kill
-    kill = True
-    t1.join()
-    exit()
+    os.kill(os.getpid(), signal.SIGTERM) #sry ging nicht anders :)
 
 #startet spiel
 def handle_start():
@@ -198,7 +197,8 @@ def handle_start():
 
 #communication to server, open in thread t1
 def handle_com():
-    if kill == True:
+    global kill
+    if kill:
         sys.exit()
     else:
         server_connected = False
@@ -206,15 +206,14 @@ def handle_com():
             socket.connect((SERVER_HOST,PORT))
             server_connected = True
         except ConnectionRefusedError:
-            print("Serververbindung verloren")
-            enemyscorelabel.configure(text= "Server verloren...")
+            print("Server wird gesucht...")
             handle_com()
         if server_connected:
             enemyscorelabel.configure(text="Spielersuche läuft...")
             while True:
-                if kill:
-                    sys.exit()
                 try:
+                    if kill:
+                        sys.exit()
                     socket.send(f":{count_score()}:;{get_highest_number()};".encode('utf-8'))
                     global last_received_message
                     last_received_message = socket.recv(1024).decode('utf-8')
@@ -259,6 +258,7 @@ def last_message_enemyheighestcount():
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
 handle_start()
+
 
 
 
