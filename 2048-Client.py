@@ -3,7 +3,6 @@ import time
 import customtkinter
 import threading
 import socket
-import sys
 import os
 import signal
 import ipaddress
@@ -19,14 +18,8 @@ keylog = False #verhindert merge bei mehrfacheingabe
 
 #Für socket Kommunication
 #####################################
-print("Server IP-Adresse: ")
-while True:
-    ip = input()
-    if ipaddress.ip_address(ip):
-        break
-    print("Keine zulässige IP-Adresse! Bitte erneut versuchen: ")
-SERVER_HOST = ip
-
+server_selected = False
+server_host = None
 PORT = 6969
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 last_received_message = ""
@@ -179,8 +172,18 @@ def handle_start():
     root.maxsize(500,550)
     root.config(background="white")
     root.bind("<KeyPress>", handle_key)
+    global server_selected
 
-    
+    dialog = customtkinter.CTkInputDialog(text="Server IP-Adresse:", title="Server IP")
+    input = dialog.get_input()
+    try:
+        if ipaddress.ip_address(input):
+            global server_host
+            server_host = input
+            server_selected = True
+    except:
+        handle_start()
+
     scorelabel.grid(row=0, column=0)
     text.grid(row=0, column=1, columnspan=2)  
     enemyscorelabel.grid(row=0, column=3)
@@ -201,11 +204,15 @@ def handle_start():
     handle_color()
     root.mainloop()
 
-#communication to server, open in thread t1
+#communication to server, opened in thread t1
 def handle_com():
+    global server_selected
+    global server_host
+    while not server_selected:
+        time.sleep(1)
     server_connected = False
     try:
-        socket.connect((SERVER_HOST,PORT))
+        socket.connect((server_host,PORT))
         server_connected = True
     except ConnectionRefusedError:
         print("Server wird gesucht...")
@@ -259,6 +266,8 @@ def last_message_enemyheighestcount():
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
 handle_start()
+
+
 
 
 
