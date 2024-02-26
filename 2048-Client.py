@@ -7,6 +7,7 @@ import sys
 import os
 import signal
 
+os.system("pip install customtkinter")
 root = customtkinter.CTk()
 labels = [] #spielfeld (als Label)
 scorelabel = customtkinter.CTkLabel(root, text="Du : 0", font=("Arial",15),width=120 ,height=40)
@@ -17,7 +18,8 @@ keylog = False #verhindert merge bei mehrfacheingabe
 
 #Für socket Kommunication
 #####################################
-SERVER_HOST = '192.168.100.190'
+SERVER_HOST = '172.17.176.1'
+#SERVER_HOST = socket.gethostbyname(socket.gethostname())
 PORT = 6969
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 last_received_message = ""
