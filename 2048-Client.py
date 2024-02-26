@@ -164,6 +164,24 @@ def handle_color():
 def on_closing():
     os.kill(os.getpid(), signal.SIGTERM) #sry ging nicht anders :)
 
+
+def wiederspielen():
+    wiederspielen = customtkinter.CTkToplevel(root)
+    wiederspielen.title("Nochmal?")
+    wiederspielen.geometry("200x200")
+    label = customtkinter.CTkLabel(wiederspielen, text="Nochmal spielen?")
+    label.pack(padx=20, pady=20)
+    button1 = customtkinter.CTkButton(wiederspielen,text="Ja",command=play_again)
+    button1.pack(padx=20,pady=5)
+    button2 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
+    button2.pack(padx=20,pady=5)
+    while True:
+        time.sleep(0.01)
+
+def play_again():
+    os.execv("2048-Client.py")
+
+
 #startet spiel
 def handle_start():
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -230,8 +248,14 @@ def handle_com():
                     scorelabel.configure(text= f"Du: {get_highest_number()}")
                 elif(last_message_gamestate() == "2"):
                     text.configure(text= "GEWONNEN")
+                    wiederspielen()
+                    while True:
+                        time.sleep(0.01)
                 elif(last_message_gamestate() == "3"):
                     text.configure(text= "VERLOREN")
+                    wiederspielen()
+                    while True:
+                        time.sleep(0.01)
                 elif(last_message_gamestate() == "0"):
                     enemyscorelabel.configure(text= "Spielersuche läuft...")
             except ConnectionResetError:
@@ -266,10 +290,6 @@ def last_message_enemyheighestcount():
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
 handle_start()
-
-
-
-
 
 
 #written by Benjamin Wende
