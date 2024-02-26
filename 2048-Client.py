@@ -19,16 +19,14 @@ keylog = False #verhindert merge bei mehrfacheingabe
 
 #Für socket Kommunication
 #####################################
-def verifyip():
-    print("Server IP-Adresse: ")
-    while True:
-        ip = input()
-        if ipaddress.ip_address(ip):
-           break
-        print("Keine zulässige IP-Adresse! Bitte erneut versuchen: ")
-    return ip
-SERVER_HOST = verifyip()
-#SERVER_HOST = socket.gethostbyname(socket.gethostname())
+print("Server IP-Adresse: ")
+while True:
+    ip = input()
+    if ipaddress.ip_address(ip):
+        break
+    print("Keine zulässige IP-Adresse! Bitte erneut versuchen: ")
+SERVER_HOST = ip
+
 PORT = 6969
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 last_received_message = ""
