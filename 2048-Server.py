@@ -10,10 +10,17 @@ queue = []
 queueaddress = []
 
 def handle_queue():
-    time.sleep(1)
-    while True:
-        print(f"In der Warteschlange: {len(queue)}")
-        time.sleep(5)
+        while True:
+            time.sleep(2)
+            for player in queue:
+                try:
+                    player.recv(1024).decode('utf-8')
+                    player.send(f":{0}:;{0};,{0},".encode('utf-8'))
+                except:
+                    print("Spieler wird aus Warteschlange entfernt")
+                    del queueaddress[queue.index(player)]
+                    del queue[queue.index(player)]
+            
 
 def handle_match(com1 : socket,add1,com2 : socket,add2):
     timeout = 10

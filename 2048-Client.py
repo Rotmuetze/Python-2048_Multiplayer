@@ -194,40 +194,34 @@ def handle_start():
 
 #communication to server, open in thread t1
 def handle_com():
-    global kill
-    if kill:
-        sys.exit()
-    else:
-        server_connected = False
-        try:
-            socket.connect((SERVER_HOST,PORT))
-            server_connected = True
-        except ConnectionRefusedError:
-            print("Server wird gesucht...")
-            handle_com()
-        if server_connected:
-            enemyscorelabel.configure(text="Spielersuche läuft...")
-            while True:
-                try:
-                    if kill:
-                        sys.exit()
-                    socket.send(f":{count_score()}:;{get_highest_number()};".encode('utf-8'))
-                    global last_received_message
-                    last_received_message = socket.recv(1024).decode('utf-8')
-                    if(last_message_gamestate() == "1"):
-                        enemyscorelabel.configure(text= f"Gegner: {last_message_enemyheighestcount()}")
-                        scorelabel.configure(text= f"Du: {get_highest_number()}")
-                    elif(last_message_gamestate() == "2"):
-                        text.configure(text= "GEWONNEN")
-                    elif(last_message_gamestate() == "3"):
-                        text.configure(text= "VERLOREN")
-                    elif(last_message_gamestate() == "0"):
-                        enemyscorelabel.configure(text= "Spielersuche läuft...")
-                except ConnectionResetError:
-                    print("Die Verbindung zum Server wurde verloren")
-                    print("Versuche erneut in: 2 Sekunden")
-                    time.sleep(2)
-                    handle_com()
+    server_connected = False
+    try:
+        socket.connect((SERVER_HOST,PORT))
+        server_connected = True
+    except ConnectionRefusedError:
+        print("Server wird gesucht...")
+        handle_com()
+    if server_connected:
+        enemyscorelabel.configure(text="Spielersuche läuft...")
+        while True:
+            try:
+                socket.send(f":{count_score()}:;{get_highest_number()};".encode('utf-8'))
+                global last_received_message
+                last_received_message = socket.recv(1024).decode('utf-8')
+                if(last_message_gamestate() == "1"):
+                    enemyscorelabel.configure(text= f"Gegner: {last_message_enemyheighestcount()}")
+                    scorelabel.configure(text= f"Du: {get_highest_number()}")
+                elif(last_message_gamestate() == "2"):
+                    text.configure(text= "GEWONNEN")
+                elif(last_message_gamestate() == "3"):
+                    text.configure(text= "VERLOREN")
+                elif(last_message_gamestate() == "0"):
+                    enemyscorelabel.configure(text= "Spielersuche läuft...")
+            except ConnectionResetError:
+                print("Die Verbindung zum Server wurde verloren")
+                print("Versuche erneut in: 2 Sekunden")
+                time.sleep(2)
+                handle_com()
 
 def count_score():
     counter = 0
