@@ -33,7 +33,7 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
             message2 = com2.recv(1024).decode('utf-8')
             com1.send(f":{gamestate1}:;{lastmessage_score(message2)};,{lastmessage_highestnumber(message2)},".encode('utf-8'))
             com2.send(f":{gamestate2}:;{lastmessage_score(message1)};,{lastmessage_highestnumber(message1)},".encode('utf-8'))
-        except:
+        except ConnectionResetError:
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
             timeout = timeout - 1
@@ -63,7 +63,7 @@ def handle_matchmaking():
             del queueaddress[0]
 
         else:
-            print(f"Nur {len(queue)} Spieler da.")
+            print(f"Nur {len(queue)} Spieler da. Matchmaking nicht möglich")
             time.sleep(1)
 
 def lastmessage_score(message):
@@ -72,7 +72,12 @@ def lastmessage_score(message):
 def lastmessage_highestnumber(message):
     return (message[int(message.find(";"))+1:int(message.rfind(";"))])
 
-    
+print("####################################################")
+print("                  Server Boot                       ")
+print(f"IP: {socket.gethostbyname(socket.gethostname())}")
+print()
+print("####################################################")
+
 threadtime = threading.Thread(target=handle_queue)
 threadtime.start()
 
@@ -81,7 +86,7 @@ threadmatchmaking.start()
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST,PORT))
-server.listen(5) #fängt an zuzuhören, begrenzt connections
+server.listen(20) #fängt an zuzuhören, begrenzt connections
 
 #enthält gamestatus falls da (0 kein spiel am laufen,1 spiel am laufen, 2 spieler hat gewonnen, 3 spieler hat verloren)
 
