@@ -6,6 +6,7 @@ import socket
 import sys
 import os
 import signal
+import ipaddress
 
 os.system("pip install customtkinter")
 root = customtkinter.CTk()
@@ -18,7 +19,15 @@ keylog = False #verhindert merge bei mehrfacheingabe
 
 #Für socket Kommunication
 #####################################
-SERVER_HOST = '172.17.176.1'
+def verifyip():
+    print("Server IP-Adresse: ")
+    while True:
+        ip = input()
+        if ipaddress.ip_address(ip):
+           break
+        print("Keine zulässige IP-Adresse! Bitte erneut versuchen: ")
+    return ip
+SERVER_HOST = verifyip()
 #SERVER_HOST = socket.gethostbyname(socket.gethostname())
 PORT = 6969
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -203,6 +212,7 @@ def handle_com():
     except ConnectionRefusedError:
         print("Server wird gesucht...")
         handle_com()
+        time.sleep(2)
     if server_connected:
         enemyscorelabel.configure(text="Spielersuche läuft...")
         while True:
