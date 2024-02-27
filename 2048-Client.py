@@ -4,6 +4,7 @@ import customtkinter
 import threading
 import socket
 import os
+import sys
 import signal
 import ipaddress
 
@@ -49,8 +50,9 @@ def newnumber():
         random_label = r.choice(empty_labels)
         random_label.configure(text=1)
     else:
-        print("VERLOREN!!!!")
-        quit()
+        print()
+        text.configure(text= "VERLOREN")
+        wiederspielen()
 
 #"drückt" alle Zahlen in gewünschte Richtung 
 #und fügt gleiche Zahlen zusammen
@@ -164,7 +166,6 @@ def handle_color():
 def on_closing():
     os.kill(os.getpid(), signal.SIGTERM) #sry ging nicht anders :)
 
-
 def wiederspielen():
     wiederspielen = customtkinter.CTkToplevel(root)
     wiederspielen.title("Nochmal?")
@@ -175,13 +176,22 @@ def wiederspielen():
     button1.pack(padx=20,pady=5)
     button2 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
     button2.pack(padx=20,pady=5)
-    while True:
-        time.sleep(0.01)
-
+    
 def play_again():
-    os.execv("2048-Client.py")
+    restart = threading.Thread(target=newgame, args=())
+    restart.start()
+    time.sleep(0.2)
+    on_closing()
 
-
+def newgame():
+    try:
+        os.system('python Python-2048_Multiplayer/2048-Client.py')
+    except:
+        print("ERROR")
+    try:
+        os.system('2048-Client.exe')
+    except:
+        print("ERROR")
 #startet spiel
 def handle_start():
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -249,12 +259,12 @@ def handle_com():
                 elif(last_message_gamestate() == "2"):
                     text.configure(text= "GEWONNEN")
                     wiederspielen()
-                    while True:
+                    while True:#unschön ik ik
                         time.sleep(0.01)
                 elif(last_message_gamestate() == "3"):
                     text.configure(text= "VERLOREN")
                     wiederspielen()
-                    while True:
+                    while True:#unschön ik ik
                         time.sleep(0.01)
                 elif(last_message_gamestate() == "0"):
                     enemyscorelabel.configure(text= "Spielersuche läuft...")
