@@ -5,7 +5,9 @@
 
 Tested with Python 3.12.2
 
-To start, either start Python files or start the exe in the 2048-Server and 2048-Client folders:
+Used [auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [brentvollebregt](https://github.com/brentvollebregt) for an executable file
+
+### To start, either start Python files or start the exe files in the 2048-Server and 2048-Client folders:
 
 
 [Client.exe](https://github.com/Rotmuetze/Python-2048_Multiplayer/tree/main/2048-Client)
