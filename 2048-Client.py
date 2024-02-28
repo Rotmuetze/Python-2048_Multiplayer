@@ -4,7 +4,6 @@ import customtkinter
 import threading
 import socket
 import os
-import sys
 import signal
 import ipaddress
 
