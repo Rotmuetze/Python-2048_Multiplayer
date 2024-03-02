@@ -7,7 +7,6 @@ import os
 import signal
 import ipaddress
 
-os.system("pip install customtkinter")
 root = customtkinter.CTk()
 labels = [] #spielfeld (als Label)
 scorelabel = customtkinter.CTkLabel(root, text="Du : 0", font=("Arial",15),width=120 ,height=40)
