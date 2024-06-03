@@ -12,10 +12,10 @@ cursor = db.cursor()
 
 print("Möchtest du wirklich alle Daten löschen? (y/n): ")
 if input() == "y":
-#    cursor.execute("DELETE FROM spielsessions WHERE spieler1pkt = 64 or spieler2pkt = 64")
-#    db.commit()
-#    print("Daten gelöscht!")
+    cursor.execute("DELETE FROM spielsessions WHERE spieler1pkt = 64 or spieler2pkt = 64")
+    db.commit()
+    print("Daten gelöscht!")
 
-    cursor.execute("DROP TABLE spielsessions")
+    #cursor.execute("DROP TABLE spielsessions")
     db.commit()
 exit()

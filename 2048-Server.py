@@ -56,7 +56,6 @@ def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
             timeout = timeout - 1
-            print(timeout)
             time.sleep(1)
             if timeout == 0:
                 print("-----------------------------------------------")
