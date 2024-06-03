@@ -33,6 +33,8 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
             message2 = com2.recv(1024).decode('utf-8')
             com1.send(f":{gamestate1}:;{lastmessage_score(message2)};,{lastmessage_highestnumber(message2)},".encode('utf-8'))
             com2.send(f":{gamestate2}:;{lastmessage_score(message1)};,{lastmessage_highestnumber(message1)},".encode('utf-8'))
+            print(f"Spieler 1: " + lastmessage_highestnumber(message1) + " Pkt")
+            print(f"Spieler 2: " + lastmessage_highestnumber(message2) + " Pkt")
         except ConnectionResetError:
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
