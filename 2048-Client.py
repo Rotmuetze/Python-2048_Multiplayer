@@ -170,7 +170,7 @@ def wiederspielen():
     wiederspielen.geometry("200x200")
     label = customtkinter.CTkLabel(wiederspielen, text="Nochmal spielen?")
     label.pack(padx=20, pady=20)
-    button1 = customtkinter.CTkButton(wiederspielen,text="Ja",command=play_again)
+    button1 = customtkinter.CTkButton(wiederspielen,text="Nein",command=play_again)
     button1.pack(padx=20,pady=5)
     button2 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
     button2.pack(padx=20,pady=5)
@@ -258,12 +258,12 @@ def handle_com():
                     text.configure(text= "GEWONNEN")
                     wiederspielen()
                     while True:#unschön ik ik
-                        time.sleep(0.01)
+                        time.sleep(0.1)
                 elif(last_message_gamestate() == "3"):
                     text.configure(text= "VERLOREN")
                     wiederspielen()
                     while True:#unschön ik ik
-                        time.sleep(0.01)
+                        time.sleep(0.1)
                 elif(last_message_gamestate() == "0"):
                     enemyscorelabel.configure(text= "Spielersuche läuft...")
             except ConnectionResetError:
@@ -294,10 +294,11 @@ def last_message_enemyscore():
 def last_message_enemyheighestcount():
     return (last_received_message[int(last_received_message.find(","))+1:int(last_received_message.rfind(","))])
 
-
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
 handle_start()
+
+
 
 
 #written by Benjamin Wende

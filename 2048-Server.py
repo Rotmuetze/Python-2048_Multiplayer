@@ -3,11 +3,31 @@ import datetime
 import time
 import threading
 import sys
+import mysql.connector
 
 PORT = 6969
 HOST = socket.gethostbyname(socket.gethostname())
 queue = []
 queueaddress = []
+
+#SQL INIZIALISIERUNG
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="sadsklghasiujgbhafjw4z689wrkldftßq0(§LJSDAS",
+    database="2048_DB"
+)
+cursor = db.cursor()
+
+def gettimestamp():
+    current_datetime = datetime.datetime.now()
+    timestamp = current_datetime.timestamp()
+    return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+
+def commsql(gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
+    val = f'{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
+    cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
+    db.commit()
 
 def handle_queue():
         while True:
@@ -21,20 +41,17 @@ def handle_queue():
                     del queueaddress[queue.index(player)]
                     del queue[queue.index(player)]
             
-
-def handle_match(com1 : socket,add1,com2 : socket,add2):
+def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
     timeout = 10
     gamestate1 = 1
     gamestate2 = 1
     print(f"Neues Match mit: {com1} und {com2}")
     while True:
-        try:
+        try:    
             message1 = com1.recv(1024).decode('utf-8')
             message2 = com2.recv(1024).decode('utf-8')
             com1.send(f":{gamestate1}:;{lastmessage_score(message2)};,{lastmessage_highestnumber(message2)},".encode('utf-8'))
             com2.send(f":{gamestate2}:;{lastmessage_score(message1)};,{lastmessage_highestnumber(message1)},".encode('utf-8'))
-            print(f"Spieler 1: " + lastmessage_highestnumber(message1) + " Pkt")
-            print(f"Spieler 2: " + lastmessage_highestnumber(message2) + " Pkt")
         except ConnectionResetError:
             print("Kein Verbindung zu einem der Spieler.")
             print(f"Timeout in: {timeout}")
@@ -46,6 +63,9 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
                 print("Timeout...")
                 print("Sitzung wird gelöscht")
                 print("-----------------------------------------------")
+                commsql(gameid, str(add1)[int(str(add1).find("'")):int(str(add1).rfind("'"))+1], lastmessage_highestnumber(message1), str(add2)[int(str(add2).find("'")):int(str(add2).rfind("'"))+1], lastmessage_highestnumber(message2))
+                print("Daten an SQL Server geschickt")
+                print("-----------------------------------------------")
                 sys.exit()
         if  lastmessage_highestnumber(message1) == "64":
             gamestate1 = 2
@@ -53,11 +73,13 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
         if lastmessage_highestnumber(message2) == "64":
             gamestate1 = 3 
             gamestate2 = 2
-
+                    
 def handle_matchmaking():
+    id = 0
     while True:
         if len(queue) >= 2:
-            threadmatch = threading.Thread(target=handle_match,args=(queue[0],queueaddress[0],queue[1],queueaddress[1]))
+            threadmatch = threading.Thread(target=handle_match,args=(queue[0],queueaddress[0],queue[1],queueaddress[1], id))
+            id = id + 1
             threadmatch.start()
             del queue[0]
             del queue[0]
@@ -95,11 +117,11 @@ server.listen(20) #fängt an zuzuhören, begrenzt connections
 while True:
     #time
 ############################################################################################
-    current_datetime = datetime.datetime.now()
-    timestamp = current_datetime.timestamp()
-    formatted_string = datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+
 ############################################################################################
     communicaton_socket, address = server.accept()
     queue.append(communicaton_socket)
     queueaddress.append(address)
-    print(f"Verbunden mit {address} um {formatted_string}")
+    print(f"Verbunden mit {address} um {gettimestamp()}")
+
+
