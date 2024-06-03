@@ -115,10 +115,6 @@ server.listen(20) #fängt an zuzuhören, begrenzt connections
 #enthält gamestatus falls da (0 kein spiel am laufen,1 spiel am laufen, 2 spieler hat gewonnen, 3 spieler hat verloren)
 
 while True:
-    #time
-############################################################################################
-
-############################################################################################
     communicaton_socket, address = server.accept()
     queue.append(communicaton_socket)
     queueaddress.append(address)
