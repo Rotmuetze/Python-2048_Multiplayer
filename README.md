@@ -18,9 +18,4 @@ Used [auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [b
 
 [Server.py](https://github.com/Rotmuetze/Python-2048_Multiplayer/blob/main/2048-Server.py)
 
-## Small Note
-### This is a small project so here are some small issues/Problmes:
 
-- Please use the IP that is giving out from the Server to connect
-- You need to install [CustomTkinter](https://github.com/TomSchimansky/CustomTkinter) from [TomSchimansky](https://github.com/TomSchimansky) (Should be installed automatically when opening the Client but who knows)
-  and of course Python... (Who would have thought it xD)
