@@ -3,7 +3,7 @@
 
 ## ***Small 2048 multiplayer version from https://github.com/Rotmuetze/Python-2048.***
 
-Tested with Python 3.12.2
+Tested with Python 3.12.3
 
 Used [auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [brentvollebregt](https://github.com/brentvollebregt) for an executable file
 
