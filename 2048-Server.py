@@ -5,7 +5,7 @@ import threading
 import sys
 import mysql.connector
 
-PORT = 1999
+PORT = 6969
 HOST = socket.gethostbyname(socket.gethostname())
 queue = []
 queueaddress = []
@@ -25,7 +25,7 @@ def gettimestamp():
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
 def commsql(timestamp, gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
-    val = f'{"'" + timestamp + "'"},{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
+    val = f'{timestamp},{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
     cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
     db.commit()
 
