@@ -24,8 +24,8 @@ def gettimestamp():
     timestamp = current_datetime.timestamp()
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
-def commsql(gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
-    val = f'{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
+def commsql(timestamp, gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
+    val = f'{"'" + timestamp + "'"},{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
     cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
     db.commit()
 
@@ -62,7 +62,7 @@ def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
                 print("Timeout...")
                 print("Sitzung wird gelöscht")
                 print("-----------------------------------------------")
-                commsql(gameid, str(add1)[int(str(add1).find("'")):int(str(add1).rfind("'"))+1], lastmessage_highestnumber(message1), str(add2)[int(str(add2).find("'")):int(str(add2).rfind("'"))+1], lastmessage_highestnumber(message2))
+                commsql(gettimestamp(), gameid, str(add1)[int(str(add1).find("'")):int(str(add1).rfind("'"))+1], lastmessage_highestnumber(message1), str(add2)[int(str(add2).find("'")):int(str(add2).rfind("'"))+1], lastmessage_highestnumber(message2))
                 print("Daten an SQL Server geschickt")
                 print("-----------------------------------------------")
                 sys.exit()
