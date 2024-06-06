@@ -25,6 +25,7 @@ def gettimestamp():
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
 def commsql(timestamp, gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
+    timestamp = "'" + timestamp + "'"
     val = f'{timestamp},{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
     cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
     db.commit()
