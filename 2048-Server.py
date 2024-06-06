@@ -5,7 +5,7 @@ import threading
 import sys
 import mysql.connector
 
-PORT = 6969
+PORT = 1999
 HOST = socket.gethostbyname(socket.gethostname())
 queue = []
 queueaddress = []
