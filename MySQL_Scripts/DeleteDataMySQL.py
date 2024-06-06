@@ -1,4 +1,5 @@
 import mysql.connector
+import time
 
 db = mysql.connector.connect(
     host="localhost",
@@ -12,8 +13,13 @@ cursor = db.cursor()
 
 print("Möchtest du wirklich alle Daten löschen? (y/n): ")
 if input() == "y":
-    cursor.execute("DELETE FROM spielsessions WHERE spieler1pkt = 64 or spieler2pkt = 64")
+    cursor.execute("DELETE FROM spielsessions")
     db.commit()
     print("Daten gelöscht!")
     db.commit()
-exit()
+
+print()
+print()
+print("x zum schliessen.")
+while(input() != "x"):
+    time.sleep(1)

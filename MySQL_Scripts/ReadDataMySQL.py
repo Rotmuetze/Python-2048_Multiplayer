@@ -1,4 +1,5 @@
 import mysql.connector
+import time
 
 db = mysql.connector.connect(
     host="localhost",
@@ -19,3 +20,9 @@ for item in result:
     i = [str(b) for b in item]
     print()
     print( i[1] + "              " + i[2] + "     " + i[3] + "               " + i[4] + "     " + i[5] + "             "  + i[0])
+
+print()
+print()
+print("x zum schliessen.")
+while(input() != "x"):
+    time.sleep(1)
