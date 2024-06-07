@@ -19,7 +19,7 @@ print("SpielID:       Spieler 1:          Punkte:         Spieler 2:          Pu
 for item in result:
     i = [str(b) for b in item]
     print()
-    print( i[1] + "              " + i[2] + "     " + i[3] + "               " + i[4] + "     " + i[5] + "             "  + i[0])
+    print( i[1] + "              " + i[2] + "     " + i[3] + "               " + i[4] + "           " + i[5] + "             "  + i[0])
 
 print()
 print()
