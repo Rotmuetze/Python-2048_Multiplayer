@@ -5,7 +5,11 @@
 
 Tested with Python 3.12.3
 
-Used [auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [brentvollebregt](https://github.com/brentvollebregt) for an executable file
+Used:
+
+[auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [brentvollebregt](https://github.com/brentvollebregt) for an executable file
+
+[mysql-connector-python](https://github.com/mysql/mysql-connector-python) from [mysql](https://github.com/mysql) for DBMS connection
 
 ### To start, either start Python files or start the exe files in the 2048-Server and 2048-Client folders:
 
