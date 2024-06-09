@@ -15,7 +15,7 @@ cursor = db.cursor()
 cursor.execute("SELECT * FROM spielsessions")
 result = cursor.fetchall()
 
-print("SpielID:       Spieler 1:          Punkte:         Spieler 2:          Punkte:        Timestamp:")
+print("SpielID:       Spieler 1:          Punkte:         Spieler 2:                Punkte:        Timestamp:")
 
 for item in result:
     i = [str(b) for b in item]

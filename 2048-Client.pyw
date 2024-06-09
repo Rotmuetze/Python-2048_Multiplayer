@@ -25,7 +25,7 @@ last_received_message = ""
 #####################################
 
 
-kill = False #True wenn T1 gekillt werden soll
+
 
 #trigger bei tastendruck
 def handle_key(event):

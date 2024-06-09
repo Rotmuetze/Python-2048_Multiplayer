@@ -25,9 +25,15 @@ def gettimestamp():
     timestamp = current_datetime.timestamp()
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
-def commsql(timestamp, gameid, spieler1, spieler1pkt, spieler2, spieler2pkt):
+def commsql(timestamp, spieler1, spieler1pkt, spieler2, spieler2pkt):
+    zaehler = 0
     timestamp = "'" + timestamp + "'"
-    val = f'{timestamp},{gameid},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
+    cursor.execute("SELECT sessionid FROM spielsessions")
+    result = cursor.fetchall()
+    for item in result:
+        zaehler = zaehler + 1
+    zaehler = zaehler + 1
+    val = f'{timestamp},{zaehler},{spieler1},{spieler1pkt},{spieler2},{spieler2pkt}'
     cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
     db.commit()
 
@@ -43,7 +49,7 @@ def handle_queue():
                     del queueaddress[queue.index(player)]
                     del queue[queue.index(player)]
             
-def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
+def handle_match(com1 : socket,add1,com2 : socket,add2):
     timeout = 10
     gamestate1 = 1
     gamestate2 = 1
@@ -64,7 +70,7 @@ def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
                 print("Timeout...")
                 print("Sitzung wird gelöscht")
                 print("-----------------------------------------------")
-                commsql(gettimestamp(), gameid, str(add1)[int(str(add1).find("'")):int(str(add1).rfind("'"))+1], lastmessage_highestnumber(message1), str(add2)[int(str(add2).find("'")):int(str(add2).rfind("'"))+1], lastmessage_highestnumber(message2))
+                commsql(gettimestamp(), str(add1)[int(str(add1).find("'")):int(str(add1).rfind("'"))+1], lastmessage_highestnumber(message1), str(add2)[int(str(add2).find("'")):int(str(add2).rfind("'"))+1], lastmessage_highestnumber(message2))
                 print("Daten an SQL Server geschickt")
                 print("-----------------------------------------------")
                 sys.exit()
@@ -76,11 +82,9 @@ def handle_match(com1 : socket,add1,com2 : socket,add2, gameid):
             gamestate2 = 2
                     
 def handle_matchmaking():
-    id = 0
     while True:
         if len(queue) >= 2:
-            threadmatch = threading.Thread(target=handle_match,args=(queue[0],queueaddress[0],queue[1],queueaddress[1], id))
-            id = id + 1
+            threadmatch = threading.Thread(target=handle_match,args=(queue[0],queueaddress[0],queue[1],queueaddress[1]))
             threadmatch.start()
             del queue[0]
             del queue[0]
@@ -89,7 +93,7 @@ def handle_matchmaking():
 
         else:
             print(f"Nur {len(queue)} Spieler da. Matchmaking nicht möglich")
-            time.sleep(1)
+            time.sleep(5)
 
 def lastmessage_score(message):
     return (message[int(message.find(":"))+1:int(message.rfind(":"))])

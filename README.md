@@ -14,7 +14,7 @@ Used [auto py to exe](https://github.com/brentvollebregt/auto-py-to-exe) from [b
 
 [Server.exe](https://github.com/Rotmuetze/Python-2048_Multiplayer/tree/main/2048-Server)
 
-[Client.py](https://github.com/Rotmuetze/Python-2048_Multiplayer/blob/main/2048-Client.py)
+[Client.pyw](https://github.com/Rotmuetze/Python-2048_Multiplayer/blob/main/2048-Client.pyw)
 
 [Server.py](https://github.com/Rotmuetze/Python-2048_Multiplayer/blob/main/2048-Server.py)
 
