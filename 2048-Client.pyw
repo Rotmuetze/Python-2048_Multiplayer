@@ -166,9 +166,12 @@ def on_closing():
 
 def wiederspielen():
     wiederspielen = customtkinter.CTkToplevel(root)
-    wiederspielen.title("Nochmal?")
+    wiederspielen.title("Verloren!   Nochmal?")
+    if last_message_gamestate() == 2:
+        label = customtkinter.CTkLabel(wiederspielen, text="Gewonnen!   Nochmal?")
+    else:
+        label = customtkinter.CTkLabel(wiederspielen, text="Verloren!   Nochmal?")
     wiederspielen.geometry("200x200")
-    label = customtkinter.CTkLabel(wiederspielen, text="Nochmal spielen?")
     label.pack(padx=20, pady=20)
     button1 = customtkinter.CTkButton(wiederspielen,text="Nein",command=play_again)
     button1.pack(padx=20,pady=5)
