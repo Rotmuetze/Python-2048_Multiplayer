@@ -10,18 +10,17 @@ IpAdresse = None
 local_hostname = socket.gethostname()
 ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
 moegliche_ips = [ip for ip in ip_addresses if not ip.startswith("127.")]
-if len(moegliche_ips) >=2:
-    zaehler = 0
-    print("Welche IP ist richtig:")
-    for ip in moegliche_ips:
-        print(f'{zaehler} : {ip}')
-        zaehler = zaehler + 1
-    inp = input()
-    zaehler = 0
-    for ip in moegliche_ips:
-        if zaehler == int(inp):
-            IpAdresse = ip
-        zaehler = zaehler + 1
+zaehler = 0
+print("Welche IP ist richtig:")
+for ip in moegliche_ips:
+    print(f'{zaehler} : {ip}')
+    zaehler = zaehler + 1
+inp = input()
+zaehler = 0
+for ip in moegliche_ips:
+    if zaehler == int(inp):
+        IpAdresse = ip
+    zaehler = zaehler + 1
 HOST = socket.gethostbyname(IpAdresse)
 queue = []
 queueaddress = []
