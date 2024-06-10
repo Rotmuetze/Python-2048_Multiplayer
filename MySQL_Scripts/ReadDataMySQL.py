@@ -15,12 +15,13 @@ cursor = db.cursor()
 cursor.execute("SELECT * FROM spielsessions")
 result = cursor.fetchall()
 
-print("SpielID:       Spieler 1:          Punkte:         Spieler 2:                Punkte:        Timestamp:")
+print("SpielID:       Spieler 1:          Punkte:             Spieler 2:                Punkte:        Timestamp:")
 
 for item in result:
     i = [str(b) for b in item]
     print()
-    print( i[1] + "              " + i[2] + "     " + i[3] + "               " + i[4] + "           " + i[5] + "             "  + i[0])
+    print("SpielID:       Spieler 1:          Punkte:             Spieler 2:                Punkte:        Timestamp:")
+    print( i[1] + "              " + i[2] + "          " + i[3] + "               " + i[4] + "                  " + i[5] + "             "  + i[0])
 
 print()
 print()

@@ -6,7 +6,23 @@ import sys
 import mysql.connector
 
 PORT = 1999
-HOST = socket.gethostbyname(socket.gethostname())
+IpAdresse = None
+local_hostname = socket.gethostname()
+ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
+moegliche_ips = [ip for ip in ip_addresses if not ip.startswith("127.")]
+if len(moegliche_ips) >=2:
+    zaehler = 0
+    print("Welche IP ist richtig:")
+    for ip in moegliche_ips:
+        print(f'{zaehler} : {ip}')
+        zaehler = zaehler + 1
+    inp = input()
+    zaehler = 0
+    for ip in moegliche_ips:
+        if zaehler == int(inp):
+            IpAdresse = ip
+        zaehler = zaehler + 1
+HOST = socket.gethostbyname(IpAdresse)
 queue = []
 queueaddress = []
 
@@ -93,7 +109,7 @@ def handle_matchmaking():
 
         else:
             print(f"Nur {len(queue)} Spieler da. Matchmaking nicht möglich")
-            time.sleep(5)
+            time.sleep(3)
 
 def lastmessage_score(message):
     return (message[int(message.find(":"))+1:int(message.rfind(":"))])
@@ -103,7 +119,7 @@ def lastmessage_highestnumber(message):
 
 print("####################################################")
 print("                  Server Boot                       ")
-print(f"IP: {socket.gethostbyname(socket.gethostname())}")
+print(f"IP: {IpAdresse}")
 print()
 print("####################################################")
 
