@@ -22,7 +22,7 @@ sql = """
     )
 """
 
-#my_cursor.execute(sql)
+my_cursor.execute(sql)
 #my_cursor.execute("CREATE DATABASE 2048_DB")
 #my_cursor.execute("DROP TABLE spielsessions")
 my_db.commit()

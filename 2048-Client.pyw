@@ -6,6 +6,7 @@ import socket
 import os
 import signal
 import ipaddress
+import sys
 
 root = customtkinter.CTk()
 labels = [] #spielfeld (als Label)
@@ -14,7 +15,6 @@ enemyscorelabel = customtkinter.CTkLabel(root, text="Serversuche läuft...", fon
 text = customtkinter.CTkLabel(root, text="2048", font=("Arial",15),width=240,height=40)
 
 keylog = False #verhindert merge bei mehrfacheingabe
-
 #Für socket Kommunication
 #####################################
 server_selected = False
@@ -23,8 +23,6 @@ PORT = 1999
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 last_received_message = ""
 #####################################
-
-
 
 
 #trigger bei tastendruck
@@ -50,7 +48,7 @@ def newnumber():
     else:
         print()
         text.configure(text= "VERLOREN")
-        wiederspielen()
+        socket.send(f":{99}:;{get_highest_number()};".encode('utf-8'))
 
 #"drückt" alle Zahlen in gewünschte Richtung 
 #und fügt gleiche Zahlen zusammen
@@ -173,26 +171,11 @@ def wiederspielen():
         label = customtkinter.CTkLabel(wiederspielen, text="Verloren!   Nochmal?")
     wiederspielen.geometry("200x200")
     label.pack(padx=20, pady=20)
-    button1 = customtkinter.CTkButton(wiederspielen,text="Nein",command=play_again)
+    button1 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
     button1.pack(padx=20,pady=5)
     button2 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
     button2.pack(padx=20,pady=5)
     
-def play_again():
-    restart = threading.Thread(target=newgame, args=())
-    restart.start()
-    time.sleep(0.2)
-    on_closing()
-
-def newgame():
-    try:
-        os.system('python Python-2048_Multiplayer/2048-Client.py')
-    except:
-        print("ERROR")
-    try:
-        os.system('2048-Client.exe')
-    except:
-        print("ERROR")
 #startet spiel
 def handle_start():
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -260,12 +243,12 @@ def handle_com():
                 elif(last_message_gamestate() == "2"):
                     text.configure(text= "GEWONNEN")
                     wiederspielen()
-                    while True:#unschön ik ik
+                    while True:
                         time.sleep(0.1)
                 elif(last_message_gamestate() == "3"):
                     text.configure(text= "VERLOREN")
                     wiederspielen()
-                    while True:#unschön ik ik
+                    while True:
                         time.sleep(0.1)
                 elif(last_message_gamestate() == "0"):
                     enemyscorelabel.configure(text= "Spielersuche läuft...")

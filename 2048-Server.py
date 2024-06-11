@@ -95,6 +95,12 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
         if lastmessage_highestnumber(message2) == "64":
             gamestate1 = 3 
             gamestate2 = 2
+        if lastmessage_score(message1) == "99":
+            gamestate1 = 3 
+            gamestate2 = 2
+        if lastmessage_score(message2) == "99":
+            gamestate1 = 2
+            gamestate2 = 3
                     
 def handle_matchmaking():
     while True:
