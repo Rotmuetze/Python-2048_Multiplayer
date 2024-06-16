@@ -113,7 +113,7 @@ def handle_matchmaking():
             del queueaddress[0]
 
         else:
-            print(f"Nur {len(queue)} Spieler da. Matchmaking nicht möglich")
+            print(f"{len(queue)} Spieler in der Warteschlange. Matchmaking nicht möglich")
             time.sleep(3)
 
 def lastmessage_score(message):

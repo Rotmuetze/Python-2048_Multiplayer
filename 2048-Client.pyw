@@ -164,24 +164,23 @@ def on_closing():
 
 def wiederspielen():
     wiederspielen = customtkinter.CTkToplevel(root)
-    wiederspielen.title("Nochmal?")
     if last_message_gamestate() == "2":
-        label = customtkinter.CTkLabel(wiederspielen, text="Gewonnen!   Nochmal?")
+        wiederspielen.title("Gewonnen!")
+        label = customtkinter.CTkLabel(wiederspielen, text="Gewonnen!")
     else:
-        label = customtkinter.CTkLabel(wiederspielen, text="Verloren!   Nochmal?")
+        wiederspielen.title("Verloren!")
+        label = customtkinter.CTkLabel(wiederspielen, text="Verloren!")
     wiederspielen.geometry("200x200")
     label.pack(padx=20, pady=20)
-    button1 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
+    button1 = customtkinter.CTkButton(wiederspielen,text="Spiel schliessen",command=on_closing)
     button1.pack(padx=20,pady=5)
-    button2 = customtkinter.CTkButton(wiederspielen,text="Nein",command=on_closing)
-    button2.pack(padx=20,pady=5)
     
 #startet spiel
 def handle_start():
     root.protocol("WM_DELETE_WINDOW", on_closing)
     root.title("2048")
-    root.minsize(500,550)
-    root.maxsize(500,550)
+    root.resizable(0,0)
+    root.geometry("500x550+400x400")
     root.config(background="white")
     root.bind("<KeyPress>", handle_key)
     global server_selected
@@ -194,11 +193,20 @@ def handle_start():
             server_host = input
             server_selected = True
     except:
-        handle_start()
-
+        toplevel = customtkinter.CTkToplevel()
+        toplevel.title("Keine IP Adresse!")
+        texttoplevel = customtkinter.CTkLabel(toplevel,200,70,text="Keine IP Adresse!")
+        button = customtkinter.CTkButton(toplevel,text="Spiel schliessen",command=on_closing)
+        texttoplevel.pack(padx=0, pady=0)
+        button.pack(padx=50,pady=0)
+        
+        
     scorelabel.grid(row=0, column=0)
     text.grid(row=0, column=1, columnspan=2)  
     enemyscorelabel.grid(row=0, column=3)
+
+    if server_selected == False:
+        root.iconify()
 
     #inizialisierung spielfeld
     for i in range(4):
@@ -279,6 +287,8 @@ def last_message_enemyscore():
 
 def last_message_enemyheighestcount():
     return (last_received_message[int(last_received_message.find(","))+1:int(last_received_message.rfind(","))])
+
+
 
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
