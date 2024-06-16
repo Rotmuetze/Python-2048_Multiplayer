@@ -6,7 +6,6 @@ import socket
 import os
 import signal
 import ipaddress
-import sys
 
 root = customtkinter.CTk()
 labels = [] #spielfeld (als Label)
@@ -162,18 +161,21 @@ def handle_color():
 def on_closing():
     os.kill(os.getpid(), signal.SIGTERM) #sry ging nicht anders :)
 
-def wiederspielen():
-    wiederspielen = customtkinter.CTkToplevel(root)
+def endscene():
+    endscene = customtkinter.CTkToplevel(root)
+    endscene.resizable(False,False)
     if last_message_gamestate() == "2":
-        wiederspielen.title("Gewonnen!")
-        label = customtkinter.CTkLabel(wiederspielen, text="Gewonnen!")
+        endscene.title("Gewonnen!")
+        label = customtkinter.CTkLabel(endscene, text="Gewonnen!")
     else:
-        wiederspielen.title("Verloren!")
-        label = customtkinter.CTkLabel(wiederspielen, text="Verloren!")
-    wiederspielen.geometry("200x200")
+        endscene.title("Verloren!")
+        label = customtkinter.CTkLabel(endscene, text="Verloren!")
+    endscene.geometry("200x200")
     label.pack(padx=20, pady=20)
-    button1 = customtkinter.CTkButton(wiederspielen,text="Spiel schliessen",command=on_closing)
+    button1 = customtkinter.CTkButton(endscene,text="Spiel schliessen",command=on_closing)
     button1.pack(padx=20,pady=5)
+    root.iconify()
+    endscene.lift()
     
 #startet spiel
 def handle_start():
@@ -251,12 +253,12 @@ def handle_com():
                     scorelabel.configure(text= f"Du: {get_highest_number()}")
                 elif(last_message_gamestate() == "2"):
                     text.configure(text= "GEWONNEN")
-                    wiederspielen()
+                    endscene()
                     while True:
                         time.sleep(0.1)
                 elif(last_message_gamestate() == "3"):
                     text.configure(text= "VERLOREN")
-                    wiederspielen()
+                    endscene()
                     while True:
                         time.sleep(0.1)
                 elif(last_message_gamestate() == "0"):
