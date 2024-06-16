@@ -195,6 +195,7 @@ def handle_start():
     except:
         toplevel = customtkinter.CTkToplevel()
         toplevel.title("Keine IP Adresse!")
+        toplevel.resizable(0,0)
         texttoplevel = customtkinter.CTkLabel(toplevel,200,70,text="Keine IP Adresse!")
         button = customtkinter.CTkButton(toplevel,text="Spiel schliessen",command=on_closing)
         texttoplevel.pack(padx=0, pady=0)
