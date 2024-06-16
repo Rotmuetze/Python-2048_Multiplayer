@@ -158,9 +158,11 @@ def handle_color():
         else:
             label.configure(fg_color="white")
 
+#beendet komplettes Programm
 def on_closing():
     os.kill(os.getpid(), signal.SIGTERM) #sry ging nicht anders :)
 
+#Schlussscene
 def endscene():
     endscene = customtkinter.CTkToplevel(root)
     endscene.resizable(False,False)
@@ -227,7 +229,7 @@ def handle_start():
     handle_color()
     root.mainloop()
 
-#communication to server, opened in thread t1
+#Kommunication zum Server, Genutzt in thread t1
 def handle_com():
     global server_selected
     global server_host
@@ -269,12 +271,14 @@ def handle_com():
                 time.sleep(2)
                 handle_com()
 
+#gibt die zusammengerechnete Summe aller Label zurück
 def count_score():
     counter = 0
     for label in labels:
        counter = counter + label.cget("text")
     return counter
 
+#gibt die höchste Summe aller Label zurück
 def get_highest_number():
     highest = 0
     for label in labels:
@@ -282,12 +286,15 @@ def get_highest_number():
             highest = label.cget("text")
     return highest
 
+#gibt den letzten Spielestatus des Gegners zurück
 def last_message_gamestate():
     return (last_received_message[int(last_received_message.find(":"))+1:int(last_received_message.rfind(":"))])
 
+#gibt den letzten versendeten Score des Gegners zurück
 def last_message_enemyscore():
     return (last_received_message[int(last_received_message.find(";"))+1:int(last_received_message.rfind(";"))])
 
+#gibt die letzte versendete höchste Punktzahl des Gegners zurück
 def last_message_enemyheighestcount():
     return (last_received_message[int(last_received_message.find(","))+1:int(last_received_message.rfind(","))])
 
@@ -296,8 +303,3 @@ def last_message_enemyheighestcount():
 t1 = threading.Thread(target=handle_com, args=())
 t1.start()
 handle_start()
-
-
-
-
-#written by Benjamin Wende

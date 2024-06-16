@@ -35,11 +35,13 @@ db = mysql.connector.connect(
 )
 cursor = db.cursor()
 
+#git einen aktuellen Zeitstempel zurück
 def gettimestamp():
     current_datetime = datetime.datetime.now()
     timestamp = current_datetime.timestamp()
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
+#Kommunikation mit MYSQL DBMS
 def commsql(timestamp, spieler1, spieler1pkt, spieler2, spieler2pkt):
     zaehler = 0
     timestamp = "'" + timestamp + "'"
@@ -52,6 +54,7 @@ def commsql(timestamp, spieler1, spieler1pkt, spieler2, spieler2pkt):
     cursor.execute(f'INSERT INTO spielsessions VALUE ({val})')
     db.commit()
 
+#kickt nicht mehr verbundene Spieler aus der Warteschlange raus
 def handle_queue():
         while True:
             time.sleep(2)
@@ -63,11 +66,13 @@ def handle_queue():
                     print("Spieler wird aus Warteschlange entfernt")
                     del queueaddress[queue.index(player)]
                     del queue[queue.index(player)]
-            
+
+#wird pro match einmal aufgerufen, Kommunikation mit beiden Spielern
 def handle_match(com1 : socket,add1,com2 : socket,add2):
     timeout = 10
     gamestate1 = 1
     gamestate2 = 1
+    #(0 kein spiel am laufen,1 spiel am laufen, 2 spieler hat gewonnen, 3 spieler hat verloren)
     print(f"Neues Match mit: {com1} und {com2}")
     while True:
         try:    
@@ -101,7 +106,8 @@ def handle_match(com1 : socket,add1,com2 : socket,add2):
         if lastmessage_score(message2) == "99":
             gamestate1 = 2
             gamestate2 = 3
-                    
+
+#startet neues Match
 def handle_matchmaking():
     while True:
         if len(queue) >= 2:
@@ -116,9 +122,11 @@ def handle_matchmaking():
             print(f"{len(queue)} Spieler in der Warteschlange. Matchmaking nicht möglich")
             time.sleep(3)
 
+#gibt den Score aus der letzten Nachricht aus
 def lastmessage_score(message):
     return (message[int(message.find(":"))+1:int(message.rfind(":"))])
 
+#gibt den höchsten Punktestand aus der letzten Nachricht aus
 def lastmessage_highestnumber(message):
     return (message[int(message.find(";"))+1:int(message.rfind(";"))])
 
@@ -138,12 +146,8 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((HOST,PORT))
 server.listen(20) #fängt an zuzuhören, begrenzt connections
 
-#enthält gamestatus falls da (0 kein spiel am laufen,1 spiel am laufen, 2 spieler hat gewonnen, 3 spieler hat verloren)
-
 while True:
     communicaton_socket, address = server.accept()
     queue.append(communicaton_socket)
     queueaddress.append(address)
     print(f"Verbunden mit {address} um {gettimestamp()}")
-
-
