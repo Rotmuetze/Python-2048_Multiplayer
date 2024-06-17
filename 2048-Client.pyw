@@ -73,7 +73,7 @@ def merge(direction):
                 elif(labels[0+i].cget("text") == labels[4+i].cget("text")):
                     labels[4+i].configure(text=labels[4+i].cget("text")*2)
                     labels[0+i].configure(text=0)
-            i = i - 1     
+            i = i - 1
     elif direction == "Left" or direction == "a" or direction == "A":
         i = 0
         while i <= 12:
