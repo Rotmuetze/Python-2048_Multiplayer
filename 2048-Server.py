@@ -5,7 +5,7 @@ import threading
 import sys
 import mysql.connector
 
-PORT = 1999
+PORT = 6969
 IpAdresse = None
 local_hostname = socket.gethostname()
 ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
