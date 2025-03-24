@@ -18,7 +18,7 @@ keylog = False #verhindert merge bei mehrfacheingabe
 #####################################
 server_selected = False
 server_host = None
-PORT = 6810
+PORT = 1999
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 last_received_message = ""
 #####################################
