@@ -136,15 +136,26 @@ print(f"IP: {IpAdresse}")
 print()
 print("####################################################")
 
+
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+try:
+    server.bind((HOST,PORT))
+except OSError:
+    print("                  Server Error                       ")
+    print("           NUR EIN SERVER PRO GERAET ERLAUBT")
+    print()
+    print("####################################################")
+    quit()
+
 threadtime = threading.Thread(target=handle_queue)
 threadtime.start()
 
 threadmatchmaking = threading.Thread(target=handle_matchmaking)
 threadmatchmaking.start()
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((HOST,PORT))
 server.listen(20) #fängt an zuzuhören, begrenzt connections
+
 
 while True:
     communicaton_socket, address = server.accept()
